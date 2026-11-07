@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Kore'den Kaçış</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="game-container">
+    <canvas id="gameCanvas" width="960" height="540"></canvas>
+
+    <!-- ============ HUD ============ -->
+    <div id="hud" class="hidden">
+      <div id="chapter-label">Bölüm 1</div>
+      <div id="objective">Görev</div>
+      <div id="stats-bar">
+        <span id="stat-money">💰 0</span>
+        <span id="stat-energy">⚡ 100</span>
+        <span id="stat-caught">🚨 0/3</span>
+        <span id="stat-time">🕐 22:00</span>
+        <span id="stat-visibility">👁 0%</span>
+      </div>
+      <div id="relations-bar">
+        <span id="rel-mother">👩 Anne: 50</span>
+        <span id="rel-father">👨 Baba: 50</span>
+        <span id="rel-friend">🧑 Arkadaş: 0</span>
+      </div>
+      <div id="inventory-bar"></div>
+    </div>
+
+    <!-- ============ DİYALOG (portreli) ============ -->
+    <div id="dialogue-box" class="hidden">
+      <div id="portrait-wrap"><canvas id="portraitCanvas" width="120" height="120"></canvas></div>
+      <div id="dialogue-content">
+        <div id="dialogue-speaker">Anlatıcı</div>
+        <div id="dialogue-text"></div>
+        <div id="dialogue-hint">[Boşluk] Devam</div>
+      </div>
+    </div>
+
+    <!-- ============ SEÇİM ============ -->
+    <div id="choice-box" class="hidden">
+      <div id="choice-question"></div>
+      <div id="choice-options"></div>
+    </div>
+
+    <!-- ============ ARA SAHNE KARTI ============ -->
+    <div id="chapter-card" class="hidden">
+      <h1 id="card-title"></h1>
+      <p id="card-sub"></p>
+    </div>
+
+    <!-- ============ MİNİ OYUN: SINAV ============ -->
+    <div id="minigame-exam" class="hidden overlay">
+      <h2>📝 Suneung Sınavı</h2>
+      <p id="exam-question"></p>
+      <div id="exam-options"></div>
+      <div id="exam-timer">⏱ 10</div>
+    </div>
+
+    <!-- ============ MİNİ OYUN: İŞ ============ -->
+    <div id="minigame-work" class="hidden overlay">
+      <h2>💼 İş Molası</h2>
+      <p>Doğru kutulara tıkla, para kazan!</p>
+      <canvas id="workCanvas" width="500" height="300"></canvas>
+      <div id="work-score">Kazanç: 0 ₩</div>
+      <button id="work-close" class="menu-btn">Bitir</button>
+    </div>
+
+    <!-- ============ TELEFON ============ -->
+    <div id="phone-overlay" class="hidden">
+      <div id="phone-content">
+        <div id="phone-caller">📞 Anne</div>
+        <div id="phone-message"></div>
+        <button id="phone-answer" class="menu-btn">Cevapla</button>
+        <button id="phone-ignore" class="menu-btn">Yoksay</button>
+      </div>
+    </div>
+
+    <!-- ============ ENVANTER ============ -->
+    <div id="inventory-modal" class="hidden overlay">
+      <h2>🎒 Envanter</h2>
+      <div id="inventory-list"></div>
+      <button id="inventory-close" class="menu-btn">Kapat</button>
+    </div>
+
+    <!-- ============ YETENEK AĞACI ============ -->
+    <div id="skills-screen" class="hidden overlay">
+      <h2>🌟 Yetenek Ağacı</h2>
+      <p id="skills-money">💰 Para: 0 ₩</p>
+      <div id="skills-list"></div>
+      <button id="skills-close" class="menu-btn">Kapat</button>
+    </div>
+
+    <!-- ============ KAÇIŞ ROTASI SEÇİMİ ============ -->
+    <div id="route-screen" class="hidden overlay">
+      <h2>🗺️ Kaçış Rotası Seç</h2>
+      <p>Her rota farklı zorlukta. Dikkatli seç.</p>
+      <div id="route-list"></div>
+    </div>
+
+    <!-- ============ BAŞARIM TOAST ============ -->
+    <div id="achievement-toast" class="hidden">
+      <div id="ach-icon">🏆</div>
+      <div>
+        <div id="ach-title"></div>
+        <div id="ach-desc"></div>
+      </div>
+    </div>
+
+    <!-- ============ SON EKRANI ============ -->
+    <div id="ending-screen" class="hidden">
+      <h1 id="ending-title"></h1>
+      <p id="ending-text"></p>
+      <div id="ending-stats"></div>
+      <div class="ending-buttons">
+        <button id="share-btn" class="menu-btn">📋 Sonucu Kopyala</button>
+        <button id="restart-btn" class="menu-btn">Ana Menü</button>
+      </div>
+    </div>
+
+    <!-- ============ ANA MENÜ ============ -->
+    <div id="main-menu" class="screen">
+      <h1 class="game-title">KORE'DEN KAÇIŞ</h1>
+      <p class="subtitle">Bir hayat, bir kaçış.</p>
+
+      <!-- Profil kartı -->
+      <div id="profile-card">
+        <div id="profile-name">Oyuncu</div>
+        <div id="profile-stats">🏆 0 kaçış | 💰 0 ₩ rekor</div>
+      </div>
+
+      <!-- Oyuncu adı -->
+      <div class="player-name-row">
+        <label>Oyuncu Adın:</label>
+        <input type="text" id="inp-player-name" maxlength="16" placeholder="Adını yaz..." />
+      </div>
+      <div class="player-name-row hidden" id="p2-name-row">
+        <label>2. Oyuncu Adı:</label>
+        <input type="text" id="inp-player2-name" maxlength="16" placeholder="2. oyuncu..." />
+      </div>
+
+      <div class="menu-buttons">
+        <button id="btn-start" class="menu-btn">Yeni Oyun</button>
+        <button id="btn-continue" class="menu-btn hidden">Devam Et</button>
+        <button id="btn-multi" class="menu-btn">2 Kişilik Yerel</button>
+        <button id="btn-scores" class="menu-btn">Skor Tablosu</button>
+        <button id="btn-settings" class="menu-btn">Ayarlar</button>
+      </div>
+      <div class="difficulty-select">
+        <span>Zorluk:</span>
+        <button class="diff-btn active" data-diff="easy">Kolay</button>
+        <button class="diff-btn" data-diff="normal">Normal</button>
+        <button class="diff-btn" data-diff="hard">Zor</button>
+      </div>
+    </div>
+
+    <!-- ============ AYARLAR ============ -->
+    <div id="settings-screen" class="screen hidden">
+      <h2>⚙️ Ayarlar</h2>
+      <div class="settings-panel">
+        <label class="setting-row">
+          <span>Ses</span>
+          <input type="checkbox" id="set-sound" checked />
+        </label>
+        <label class="setting-row">
+          <span>Ses Seviyesi</span>
+          <input type="range" id="set-volume" min="0" max="100" value="50" />
+        </label>
+        <label class="setting-row">
+          <span>Renk Körü Modu</span>
+          <input type="checkbox" id="set-colorblind" />
+        </label>
+        <label class="setting-row">
+          <span>Dil / Language</span>
+          <select id="set-lang">
+            <option value="tr">Türkçe</option>
+            <option value="en">English</option>
+          </select>
+        </label>
+        <label class="setting-row">
+          <span>Mobil Kontroller</span>
+          <input type="checkbox" id="set-touch" />
+        </label>
+        <label class="setting-row">
+          <span>Ekran Sarsıntısı</span>
+          <input type="checkbox" id="set-shake" checked />
+        </label>
+      </div>
+      <button id="settings-back" class="menu-btn">Geri</button>
+    </div>
+
+    <!-- ============ SKOR TABLOSU ============ -->
+    <div id="scores-screen" class="screen hidden">
+      <h2>🏆 Skor Tablosu</h2>
+      <div id="scores-list"></div>
+      <button id="scores-back" class="menu-btn">Geri</button>
+    </div>
+
+    <!-- ============ KARAKTER OLUŞTURMA ============ -->
+    <div id="char-create" class="screen hidden">
+      <h2>Karakterini Yarat</h2>
+      <div class="create-layout">
+        <canvas id="previewCanvas" width="160" height="220"></canvas>
+        <div class="create-options">
+          <div class="option-group">
+            <label>Karakter Adı</label>
+            <input type="text" id="inp-name" maxlength="12" placeholder="Karakter adı..." />
+          </div>
+          <div class="option-group">
+            <label>Görünüm</label>
+            <div class="option-row" id="opt-gender">
+              <button class="opt-btn active" data-val="male">Erkek</button>
+              <button class="opt-btn" data-val="female">Kız</button>
+              <button class="opt-btn" data-val="neutral">Nötr</button>
+            </div>
+          </div>
+          <div class="option-group">
+            <label>Saç Rengi</label>
+            <div class="option-row" id="opt-hair">
+              <button class="color-btn active" data-val="#1a1a1a" style="background:#1a1a1a"></button>
+              <button class="color-btn" data-val="#4a2c17" style="background:#4a2c17"></button>
+              <button class="color-btn" data-val="#c9a227" style="background:#c9a227"></button>
+              <button class="color-btn" data-val="#b33a3a" style="background:#b33a3a"></button>
+              <button class="color-btn" data-val="#3a6fb3" style="background:#3a6fb3"></button>
+              <button class="color-btn" data-val="#b33a8b" style="background:#b33a8b"></button>
+            </div>
+          </div>
+          <div class="option-group">
+            <label>Ten Rengi</label>
+            <div class="option-row" id="opt-skin">
+              <button class="color-btn active" data-val="#f5d0b0" style="background:#f5d0b0"></button>
+              <button class="color-btn" data-val="#e8b88a" style="background:#e8b88a"></button>
+              <button class="color-btn" data-val="#c98e5a" style="background:#c98e5a"></button>
+              <button class="color-btn" data-val="#8d5a3a" style="background:#8d5a3a"></button>
+            </div>
+          </div>
+          <div class="option-group">
+            <label>Kıyafet</label>
+            <div class="option-row" id="opt-cloth">
+              <button class="color-btn active" data-val="#3a5a8c" style="background:#3a5a8c"></button>
+              <button class="color-btn" data-val="#8c3a3a" style="background:#8c3a3a"></button>
+              <button class="color-btn" data-val="#3a8c5a" style="background:#3a8c5a"></button>
+              <button class="color-btn" data-val="#6a3a8c" style="background:#6a3a8c"></button>
+              <button class="color-btn" data-val="#2a2a2a" style="background:#2a2a2a"></button>
+            </div>
+          </div>
+          <div class="option-group">
+            <label>Atmosfer</label>
+            <div class="option-row" id="opt-atmo">
+              <button class="opt-btn active" data-val="night">Gece Neon</button>
+              <button class="opt-btn" data-val="day">Gündüz</button>
+              <button class="opt-btn" data-val="sunset">Gün Batımı</button>
+              <button class="opt-btn" data-val="winter">Kış (Kar)</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button id="btn-confirm-char" class="menu-btn">Oyuna Başla</button>
+    </div>
+
+    <!-- ============ MOBİL KONTROLLER ============ -->
+    <div id="touch-controls" class="hidden">
+      <div id="joystick-base"><div id="joystick-knob"></div></div>
+      <div id="touch-buttons">
+        <button id="btn-run" class="touch-btn">KOŞ</button>
+        <button id="btn-crouch" class="touch-btn">ÇÖM</button>
+        <button id="btn-interact" class="touch-btn">KULLAN</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Script sırası önemli! -->
+  <script src="data.js"></script>
+  <script src="engine.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
