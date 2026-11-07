@@ -1,0 +1,366 @@
+/* ============================================================
+   KORE'DEN KAÇIŞ — Tam Stil Dosyası
+   ============================================================ */
+
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
+
+body {
+  background: #0a0a14;
+  display: flex; justify-content: center; align-items: center;
+  min-height: 100vh; overflow: hidden;
+  touch-action: none;
+}
+
+#game-container {
+  position: relative; width: 960px; height: 540px;
+  max-width: 100vw; max-height: 100vh;
+}
+
+#gameCanvas {
+  display: block; width: 100%; height: 100%;
+  background: #1a1a2e; border-radius: 8px;
+  box-shadow: 0 0 40px rgba(100,100,255,0.2);
+}
+
+.hidden { display: none !important; }
+
+/* ============ EKRANLAR ============ */
+.screen {
+  position: absolute; inset: 0; background: rgba(8,8,20,0.97);
+  display: flex; flex-direction: column; justify-content: center; align-items: center;
+  border-radius: 8px; color: #fff; padding: 24px; z-index: 10;
+  overflow-y: auto;
+}
+
+.overlay {
+  position: absolute; inset: 0; background: rgba(5,5,15,0.95);
+  display: flex; flex-direction: column; justify-content: center; align-items: center;
+  z-index: 40; color: #fff; padding: 30px; border-radius: 8px;
+}
+
+/* ============ ANA MENÜ ============ */
+.game-title {
+  font-size: 46px; letter-spacing: 6px;
+  background: linear-gradient(135deg, #ffd166, #ff6b6b, #4a4aff);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  margin-bottom: 4px;
+}
+
+.subtitle { font-size: 15px; color: #888; margin-bottom: 14px; font-style: italic; }
+
+#profile-card {
+  background: rgba(74,74,255,0.12);
+  border: 1px solid #4a4aff; border-radius: 10px;
+  padding: 8px 20px; margin-bottom: 12px; text-align: center; min-width: 280px;
+}
+#profile-name { font-size: 16px; font-weight: bold; color: #ffd166; }
+#profile-stats { font-size: 12px; color: #aaa; margin-top: 2px; }
+
+.player-name-row {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 8px; font-size: 14px; color: #ccc;
+}
+.player-name-row label { min-width: 120px; text-align: right; }
+.player-name-row input {
+  padding: 8px 14px; background: #1a1a30; border: 1px solid #4a4aff;
+  border-radius: 6px; color: #fff; font-size: 14px; width: 200px;
+}
+.player-name-row input:focus { outline: none; border-color: #ffd166; }
+
+.menu-buttons { display: flex; flex-direction: column; gap: 8px; margin: 12px 0; }
+.menu-btn {
+  padding: 11px 50px; background: #1e1e3e; border: 2px solid #4a4aff;
+  border-radius: 8px; color: #fff; font-size: 16px; cursor: pointer;
+  transition: all 0.2s; min-width: 260px;
+}
+.menu-btn:hover { background: #4a4aff; transform: scale(1.03); }
+
+.difficulty-select { display: flex; align-items: center; gap: 8px; font-size: 14px; color: #aaa; }
+.diff-btn {
+  padding: 7px 18px; background: transparent; border: 1px solid #444;
+  border-radius: 6px; color: #aaa; cursor: pointer; transition: all 0.2s;
+}
+.diff-btn.active, .diff-btn:hover { border-color: #ffd166; color: #ffd166; }
+
+/* ============ AYARLAR ============ */
+#settings-screen h2, #scores-screen h2 { margin-bottom: 20px; font-size: 26px; color: #ffd166; }
+.settings-panel {
+  display: flex; flex-direction: column; gap: 14px;
+  background: rgba(30,30,62,0.5); padding: 24px 32px;
+  border-radius: 12px; border: 1px solid #4a4aff; margin-bottom: 20px; min-width: 360px;
+}
+.setting-row {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 15px; color: #ccc; gap: 20px;
+}
+.setting-row input[type="checkbox"] { width: 20px; height: 20px; cursor: pointer; accent-color: #4a4aff; }
+.setting-row input[type="range"] { width: 160px; accent-color: #4a4aff; }
+.setting-row select {
+  padding: 6px 12px; background: #1a1a30; border: 1px solid #4a4aff;
+  border-radius: 6px; color: #fff; font-size: 14px;
+}
+
+/* ============ SKOR TABLOSU ============ */
+#scores-list { max-width: 560px; width: 100%; margin-bottom: 20px; }
+.score-row {
+  display: flex; justify-content: space-between; padding: 10px 16px;
+  border-bottom: 1px solid #2a2a4a; font-size: 14px;
+}
+.score-row:nth-child(odd) { background: rgba(74,74,255,0.05); }
+.score-rank { color: #ffd166; font-weight: bold; margin-right: 10px; }
+.score-name { color: #4affb0; font-weight: bold; }
+
+/* ============ KARAKTER OLUŞTURMA ============ */
+#char-create h2 { margin-bottom: 18px; font-size: 24px; color: #ffd166; }
+.create-layout { display: flex; gap: 36px; align-items: flex-start; margin-bottom: 18px; }
+#previewCanvas { background: #12122a; border-radius: 12px; border: 2px solid #4a4aff; }
+.create-options { display: flex; flex-direction: column; gap: 10px; }
+.option-group label {
+  display: block; font-size: 11px; color: #888; margin-bottom: 4px;
+  text-transform: uppercase; letter-spacing: 1px;
+}
+.option-row { display: flex; gap: 6px; flex-wrap: wrap; }
+.opt-btn {
+  padding: 6px 13px; background: #1a1a30; border: 1px solid #444;
+  border-radius: 6px; color: #ccc; font-size: 12px; cursor: pointer; transition: all 0.15s;
+}
+.opt-btn.active, .opt-btn:hover { border-color: #4a4aff; color: #fff; background: #2a2a4a; }
+.color-btn {
+  width: 30px; height: 30px; border-radius: 50%;
+  border: 3px solid transparent; cursor: pointer; transition: all 0.15s;
+}
+.color-btn.active { border-color: #ffd166; transform: scale(1.15); }
+#inp-name {
+  padding: 7px 13px; background: #1a1a30; border: 1px solid #4a4aff;
+  border-radius: 6px; color: #fff; font-size: 13px; width: 170px;
+}
+
+/* ============ HUD ============ */
+#hud {
+  position: absolute; top: 10px; left: 10px; color: #fff;
+  text-shadow: 0 2px 4px #000; pointer-events: none; z-index: 5;
+}
+#chapter-label { font-size: 11px; opacity: 0.7; letter-spacing: 2px; text-transform: uppercase; }
+#objective { font-size: 15px; font-weight: bold; margin-top: 3px; color: #ffd166; }
+
+#stats-bar {
+  margin-top: 8px; display: flex; gap: 10px; font-size: 12px;
+  background: rgba(0,0,0,0.45); padding: 5px 10px; border-radius: 6px; width: fit-content;
+}
+#relations-bar {
+  margin-top: 6px; display: flex; gap: 10px; font-size: 11px;
+  background: rgba(0,0,0,0.45); padding: 4px 10px; border-radius: 6px; width: fit-content;
+}
+#rel-mother { color: #ff9ac9; }
+#rel-father { color: #9ac9ff; }
+#rel-friend { color: #9aff9a; }
+#inventory-bar { margin-top: 6px; display: flex; gap: 5px; flex-wrap: wrap; max-width: 340px; }
+.inv-item {
+  background: rgba(74,74,255,0.3); border: 1px solid #4a4aff;
+  padding: 2px 7px; border-radius: 4px; font-size: 10px;
+}
+
+/* ============ DİYALOG (portreli) ============ */
+#dialogue-box {
+  position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+  width: 88%; background: rgba(8,8,25,0.96); border: 2px solid #4a4aff;
+  border-radius: 10px; padding: 14px 20px; color: #fff; z-index: 20;
+  box-shadow: 0 0 25px rgba(74,74,255,0.4);
+  display: flex; gap: 14px; align-items: flex-start;
+}
+#portrait-wrap {
+  width: 90px; height: 90px; flex-shrink: 0;
+  background: #0a0a1a; border: 1px solid #4a4aff; border-radius: 8px;
+  display: flex; justify-content: center; align-items: center; overflow: hidden;
+}
+#portraitCanvas { width: 90px; height: 90px; }
+#dialogue-content { flex: 1; }
+#dialogue-speaker { color: #ffd166; font-weight: bold; font-size: 14px; margin-bottom: 5px; }
+#dialogue-text { font-size: 14px; line-height: 1.55; min-height: 42px; }
+#dialogue-hint { margin-top: 6px; font-size: 10px; opacity: 0.5; text-align: right; }
+
+/* ============ SEÇİM ============ */
+#choice-box {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  background: rgba(8,8,25,0.98); border: 2px solid #4a4aff; border-radius: 12px;
+  padding: 22px 30px; color: #fff; width: 68%; z-index: 25;
+  box-shadow: 0 0 35px rgba(74,74,255,0.5);
+}
+#choice-question { font-size: 15px; margin-bottom: 14px; text-align: center; line-height: 1.5; }
+#choice-options { display: flex; flex-direction: column; gap: 8px; }
+.choice-btn {
+  padding: 11px 16px; background: #1a1a30; border: 1px solid #4a4aff;
+  border-radius: 8px; color: #fff; font-size: 13px; cursor: pointer;
+  transition: all 0.15s; text-align: left;
+}
+.choice-btn:hover { background: #4a4aff; transform: translateX(5px); }
+
+/* ============ ARA SAHNE KARTI ============ */
+#chapter-card {
+  position: absolute; inset: 0; background: #05050f; z-index: 60;
+  display: flex; flex-direction: column; justify-content: center; align-items: center;
+  color: #fff; animation: fadeIn 0.4s ease;
+}
+#chapter-card h1 { font-size: 42px; color: #ffd166; letter-spacing: 4px; }
+#chapter-card p { font-size: 16px; color: #888; margin-top: 10px; font-style: italic; }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* ============ MİNİ OYUNLAR ============ */
+#minigame-exam h2, #minigame-work h2 { color: #ffd166; margin-bottom: 14px; font-size: 24px; }
+#exam-question { font-size: 17px; margin-bottom: 18px; text-align: center; max-width: 600px; line-height: 1.5; }
+#exam-options { display: flex; flex-direction: column; gap: 8px; width: 60%; }
+#exam-timer { margin-top: 14px; font-size: 19px; color: #ff6b6b; font-weight: bold; }
+#minigame-work p { margin-bottom: 10px; color: #aaa; }
+#workCanvas {
+  background: #12122a; border: 2px solid #4a4aff; border-radius: 8px;
+  margin-bottom: 10px; cursor: pointer; max-width: 100%;
+}
+#work-score { font-size: 17px; color: #ffd166; margin-bottom: 10px; }
+
+/* ============ TELEFON ============ */
+#phone-overlay { position: absolute; top: 18px; right: 18px; z-index: 30; }
+#phone-content {
+  background: rgba(8,8,25,0.97); border: 2px solid #ff6b6b; border-radius: 12px;
+  padding: 14px 18px; color: #fff; width: 270px;
+  box-shadow: 0 0 20px rgba(255,107,107,0.4);
+  animation: shake 0.5s infinite;
+}
+@keyframes shake {
+  0%,100% { transform: rotate(0); }
+  25% { transform: rotate(-2deg); }
+  75% { transform: rotate(2deg); }
+}
+#phone-caller { color: #ff6b6b; font-weight: bold; margin-bottom: 6px; font-size: 14px; }
+#phone-message { font-size: 12px; margin-bottom: 10px; line-height: 1.4; }
+#phone-answer, #phone-ignore {
+  min-width: auto; padding: 6px 14px; font-size: 12px;
+  margin-right: 5px; display: inline-block;
+}
+
+/* ============ ENVANTER MODAL ============ */
+#inventory-modal h2, #skills-screen h2, #route-screen h2 {
+  color: #ffd166; margin-bottom: 14px; font-size: 24px;
+}
+#inventory-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 16px; min-width: 340px; }
+.inventory-entry {
+  background: rgba(30,30,62,0.6); border: 1px solid #4a4aff;
+  border-radius: 8px; padding: 10px 16px; font-size: 13px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.inventory-entry button {
+  padding: 4px 12px; background: #4a4aff; border: none;
+  border-radius: 5px; color: #fff; font-size: 11px; cursor: pointer;
+}
+.inventory-entry button:hover { background: #6a6aff; }
+.inventory-entry button:disabled { background: #333; cursor: not-allowed; }
+
+/* ============ YETENEK AĞACI ============ */
+#skills-money { color: #ffd166; font-size: 15px; margin-bottom: 14px; }
+#skills-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; min-width: 420px; }
+.skill-entry {
+  background: rgba(30,30,62,0.6); border: 1px solid #4a4aff;
+  border-radius: 8px; padding: 10px 16px; font-size: 13px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.skill-entry .skill-info { flex: 1; }
+.skill-entry .skill-name { font-weight: bold; color: #4affb0; }
+.skill-entry .skill-desc { font-size: 11px; color: #888; margin-top: 2px; }
+.skill-entry .skill-level { color: #ffd166; font-size: 12px; margin: 0 12px; }
+.skill-entry button {
+  padding: 6px 14px; background: #4a4aff; border: none;
+  border-radius: 6px; color: #fff; font-size: 12px; cursor: pointer;
+}
+.skill-entry button:hover { background: #6a6aff; }
+.skill-entry button:disabled { background: #333; cursor: not-allowed; }
+
+/* ============ KAÇIŞ ROTASI ============ */
+#route-list { display: flex; gap: 16px; margin-top: 16px; flex-wrap: wrap; justify-content: center; }
+.route-card {
+  background: rgba(30,30,62,0.6); border: 2px solid #4a4aff;
+  border-radius: 12px; padding: 20px 24px; width: 220px;
+  cursor: pointer; transition: all 0.2s; text-align: center;
+}
+.route-card:hover { border-color: #ffd166; transform: translateY(-4px); }
+.route-icon { font-size: 36px; margin-bottom: 8px; }
+.route-name { font-size: 17px; font-weight: bold; color: #ffd166; margin-bottom: 6px; }
+.route-desc { font-size: 12px; color: #aaa; line-height: 1.4; margin-bottom: 8px; }
+.route-diff { font-size: 12px; color: #ff6b6b; font-weight: bold; }
+
+/* ============ BAŞARIM TOAST ============ */
+#achievement-toast {
+  position: absolute; top: 20px; right: 20px; z-index: 100;
+  background: linear-gradient(135deg, rgba(74,74,255,0.95), rgba(176,74,255,0.95));
+  border: 2px solid #ffd166; border-radius: 10px;
+  padding: 12px 18px; color: #fff; display: flex; align-items: center; gap: 12px;
+  box-shadow: 0 0 25px rgba(255,209,102,0.5);
+  animation: slideIn 0.4s ease;
+  max-width: 320px;
+}
+@keyframes slideIn {
+  from { transform: translateX(400px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+#ach-icon { font-size: 30px; }
+#ach-title { font-weight: bold; color: #ffd166; font-size: 14px; }
+#ach-desc { font-size: 12px; color: #eee; margin-top: 2px; }
+
+/* ============ SON EKRANI ============ */
+#ending-screen { z-index: 50; }
+#ending-title { font-size: 42px; margin-bottom: 14px; }
+#ending-text {
+  font-size: 15px; max-width: 640px; line-height: 1.7;
+  margin-bottom: 18px; opacity: 0.85; text-align: center;
+}
+#ending-stats { font-size: 13px; color: #aaa; margin-bottom: 22px; line-height: 1.8; text-align: center; }
+.ending-buttons { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+.ending-buttons .menu-btn { min-width: 200px; }
+
+/* ============ MOBİL KONTROLLER ============ */
+#touch-controls { position: absolute; inset: 0; pointer-events: none; z-index: 15; }
+#joystick-base {
+  position: absolute; bottom: 30px; left: 30px;
+  width: 120px; height: 120px; border-radius: 50%;
+  background: rgba(74,74,255,0.2); border: 2px solid rgba(74,74,255,0.5);
+  pointer-events: auto; touch-action: none;
+}
+#joystick-knob {
+  position: absolute; top: 50%; left: 50%;
+  width: 50px; height: 50px; border-radius: 50%;
+  background: rgba(74,74,255,0.7); border: 2px solid #4a4aff;
+  transform: translate(-50%, -50%); pointer-events: none;
+}
+#touch-buttons {
+  position: absolute; bottom: 30px; right: 30px;
+  display: flex; flex-direction: column; gap: 10px; pointer-events: auto;
+}
+.touch-btn {
+  width: 80px; height: 80px; border-radius: 50%;
+  background: rgba(74,74,255,0.3); border: 2px solid rgba(74,74,255,0.6);
+  color: #fff; font-size: 13px; font-weight: bold;
+  pointer-events: auto; cursor: pointer; touch-action: none;
+}
+.touch-btn:active { background: rgba(74,74,255,0.7); }
+
+/* ============ RENK KÖRÜ MODU ============ */
+body.colorblind #stat-money { color: #f0e442; }
+body.colorblind #stat-energy { color: #56b4e9; }
+body.colorblind #stat-caught { color: #e69f00; }
+body.colorblind .skill-entry .skill-name { color: #56b4e9; }
+
+/* ============ MOBİL UYUM ============ */
+@media (max-width: 768px) {
+  .game-title { font-size: 32px; letter-spacing: 3px; }
+  .menu-btn { min-width: 220px; padding: 10px 30px; font-size: 14px; }
+  #char-create .create-layout { flex-direction: column; gap: 16px; }
+  #previewCanvas { width: 120px; height: 165px; }
+  #dialogue-box { width: 94%; padding: 10px 14px; }
+  #portrait-wrap { width: 60px; height: 60px; }
+  #portraitCanvas { width: 60px; height: 60px; }
+  #choice-box { width: 85%; padding: 16px 20px; }
+  .setting-row { font-size: 13px; }
+  .settings-panel { min-width: auto; width: 100%; padding: 16px 20px; }
+  #skills-list, #inventory-list { min-width: auto; width: 100%; }
+  .route-card { width: 160px; padding: 14px 16px; }
+  #chapter-card h1 { font-size: 28px; }
+  #ending-title { font-size: 30px; }
+}
